@@ -5,7 +5,7 @@
     "main": "index.js",
     "type": "module",
     "scripts": {
-        "start": "node ./index.js",
+        "start": "nodemon ts-node src/index.js",
         "start:dev": "nodemon ./index.js",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
@@ -17,6 +17,13 @@
     },
     "dependencies": {
         "@nut-tree/nut-js": "^2.3.0",
+        "cross-env": "^7.0.3",
+        "dotenv": "^16.3.1",
+        "eslint": "^8.44.0",
+        "ts-node": "^10.9.1",
+        "ts-node-dev": "^2.0.0",
+        "typescript": "^5.1.6",
+        "webpack": "^5.88.1",
         "ws": "^8.8.0"
     }
 }
