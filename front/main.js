@@ -9214,14 +9214,15 @@
                             })), t(Bo({page: "room"})));
                             break;
                         case"update_room":
+                            console.log(o);
                             var b = JSON.parse(o);
                             t(_o({data: b}));
                             break;
                         case"update_winners":
-                            var w = JSON.parse(o);
                             t(jo({winners: w}));
                             break;
                         case"create_game":
+                            console.log(o);
                             var S = JSON.parse(o), x = S.idPlayer, k = S.idGame;
                             n.playerIdx = x, t(ko({index: x})), t(Eo({idGame: k})), t(Bo({page: "chooseShip"}));
                             break;
