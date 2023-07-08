@@ -19,7 +19,7 @@ const addRoom = (): number => {
         roomUsers: []
     }
 
-    if (rooms.length !== 1) {
+    if (rooms?.length !== 1) {
         rooms?.push(newRoom);
     }
 

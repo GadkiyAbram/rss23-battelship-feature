@@ -6,6 +6,8 @@ const UPDATE_ROOM: string = 'update_room';
 const CREATE_GAME: string = 'create_game';
 const ADD_SHIPS: string = 'add_ships';
 const START_GAME: string = 'start_game';
+const TURN: string = 'turn';
+const ATTACK: string = 'attack';
 
 export {
     REG,
@@ -15,5 +17,7 @@ export {
     UPDATE_ROOM,
     CREATE_GAME,
     ADD_SHIPS,
-    START_GAME
+    START_GAME,
+    TURN,
+    ATTACK
 }

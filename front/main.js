@@ -9191,10 +9191,12 @@
                     var r = JSON.parse(e.data), o = r.data;
                     switch (console.log(r.type), r.type) {
                         case"turn":
+                            console.log(r.data);
                             var a = (u = JSON.parse(r.data).currentPlayer) === n.playerIdx;
                             t(Co({isCurrentPlayer: a})), t(_r({timer: a}));
                             break;
                         case"attack":
+                            console.log(r);
                             var i = JSON.parse(r.data), l = i.position, u = i.currentPlayer, s = i.status,
                                 c = n.playerIdx === u ? "enemyField" : "ourField";
                             t(Yo({position: l, status: s, player: c})), qo.playAudio(s);
@@ -9222,7 +9224,6 @@
                             t(jo({winners: w}));
                             break;
                         case"create_game":
-                            console.log(o);
                             var S = JSON.parse(o), x = S.idPlayer, k = S.idGame;
                             n.playerIdx = x, t(ko({index: x})), t(Eo({idGame: k})), t(Bo({page: "chooseShip"}));
                             break;

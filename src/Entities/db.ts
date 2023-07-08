@@ -1,13 +1,13 @@
 import {Player} from './Player/Player.ts';
 import {Game} from './Game/Game.ts';
 
-export interface Room {
+export type Room = {
     roomId: number,
     // roomUsers?: [{ name: string, index: number }]
     roomUsers: []
 }
 
-type Database = {
+interface Database {
     players?: Player[],
     games?: Game[],
     rooms?: any,
@@ -21,9 +21,14 @@ const db: Database = {
     ships: []
 };
 
+const shipsData: any = [];
+const shipsPositions: any = [];
+
 // const playersDb: Player[] = [];
 // const gamesDb: Game[] = [];
 
 export {
-    db
+    db,
+    shipsData,
+    shipsPositions
 }

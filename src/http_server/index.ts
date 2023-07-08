@@ -3,10 +3,22 @@ import * as path from 'path';
 import * as http from 'http';
 import {WebSocketServer} from 'ws';
 import {cmd} from '../handlers/cmd.ts';
-import {ADD_SHIPS, ADD_USER_TO_ROOM, CREATE_GAME, CREATE_ROOM, START_GAME} from "../constants/commands.ts";
-import {addShips} from "../handlers/ships.ts";
+import {
+    ADD_SHIPS,
+    ADD_USER_TO_ROOM,
+    ATTACK,
+    CREATE_GAME,
+    CREATE_ROOM,
+    START_GAME,
+    TURN
+} from "../constants/commands.ts";
+import {addShips, getShipsByPlayer, initShips} from "../handlers/ships.ts";
+import {nextPlayerTurn} from "../utils/nextPlayerTurn.ts";
+import {shipsData, shipsPositions} from '../Entities/db.ts';
 
 let socketId: number = 0;
+// @ts-ignore
+const startGameData = [];
 
 export const httpServer = http.createServer(function (req, res) {
     const __dirname = path.resolve(path.dirname(''));
@@ -25,8 +37,6 @@ export const httpServer = http.createServer(function (req, res) {
 const ws = new WebSocketServer({server: httpServer});
 
 ws.on('connection', (socket) => {
-    // @ts-ignore
-    const startGameData = [];
     const newSocketId = ++socketId;
     console.log(`${newSocketId} Connected!`);
 
@@ -35,7 +45,7 @@ ws.on('connection', (socket) => {
             console.log(msg.toString());
             const requestData = JSON.parse(msg.toString());
             const {type} = requestData;
-            let payload = '';
+            let payload = {};
 
             if (requestData.data) {
                 payload = JSON.parse(requestData.data);
@@ -54,23 +64,54 @@ ws.on('connection', (socket) => {
                     client.send(JSON.stringify(result));
                 });
             } else if (type === ADD_SHIPS) {
+                // const startGameData = [];
                 // @ts-ignore
                 const playerId = payload['indexPlayer'];
 
-                startGameData[playerId] = cmd(type, playerId, payload);
+                shipsData[playerId] = cmd(type, playerId, payload);
 
-                if (startGameData.length === 2) {
+                // startGameData[playerId] = cmd(type, playerId, payload);
+
+                shipsPositions.push(initShips(playerId));
+
+                console.log(shipsPositions);
+
+                if (shipsData.length === 2) {
                     let initId = 0;
                     // @ts-ignore
-                    const data = startGameData[initId];
+                    const data = shipsData[initId];
+                    const currentPlayerTurn = initId;
                     ws.clients.forEach((client) => {
                         client.send(JSON.stringify({
                             type: START_GAME,
                             data
                         }));
+
+                        client.send(JSON.stringify({
+                            type: TURN,
+                            data: JSON.stringify({currentPlayer: currentPlayerTurn})
+                        }))
                         initId++;
                     });
                 }
+            } else
+
+            if (type === ATTACK) {
+                const result = cmd(type, socketId, payload);
+                ws.clients.forEach((client) => {
+                    client.send(JSON.stringify(result));
+
+                    // const enemyShips: any = getShipsByPlayer()
+
+                    client.send(JSON.stringify({
+                        type: TURN,
+                        // @ts-ignore
+                        data: JSON.stringify({currentPlayer: nextPlayerTurn(payload?.indexPlayer, [0, 1])})
+                    }));
+                });
+
+                socket.send(JSON.stringify(result));
+
             } else {
                 const result = cmd(type, socketId, payload);
                 socket.send(JSON.stringify(result));
