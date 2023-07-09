@@ -9186,7 +9186,7 @@
             function e(e) {
                 var t = e.dispatch, n = this;
                 this.playerIdx = -1;
-                var r = new WebSocket("ws://localhost:3000");
+                var r = new WebSocket("ws://localhost:8181");
                 this.webSocket = r, r.onmessage = function (e) {
                     var r = JSON.parse(e.data), o = r.data;
                     switch (console.log(r.type), r.type) {

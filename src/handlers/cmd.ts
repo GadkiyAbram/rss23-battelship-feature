@@ -28,7 +28,8 @@ export const cmd = (cmd: string, socketId: number, payload: any) => {
 
             return {
                 type: cmd,
-                data: JSON.stringify(created)
+                data: JSON.stringify(created),
+                id: 0
             };
         case UPDATE_WINNERS:
             break;
@@ -37,7 +38,8 @@ export const cmd = (cmd: string, socketId: number, payload: any) => {
 
             return {
                 type: UPDATE_ROOM,
-                data: JSON.stringify([room])
+                data: JSON.stringify([room]),
+                id: 0
             }
         case ADD_USER_TO_ROOM:
             const {indexRoom} = payload;
@@ -45,7 +47,8 @@ export const cmd = (cmd: string, socketId: number, payload: any) => {
 
             return {
                 type: CREATE_GAME,
-                data: JSON.stringify(addedRoom)
+                data: JSON.stringify(addedRoom),
+                id: 0
             }
         case ADD_SHIPS:
             addShips(socketId, payload);
@@ -53,7 +56,8 @@ export const cmd = (cmd: string, socketId: number, payload: any) => {
             const shipsData = shipsTable.find(({currentPlayerIndex}) => currentPlayerIndex === socketId);
 
             return {
-                data: JSON.stringify(shipsData)
+                data: JSON.stringify(shipsData),
+                id: 0
             }
         case ATTACK:
             return attack(socketId, payload);

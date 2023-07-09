@@ -97,16 +97,18 @@ ws.on('connection', (socket) => {
             } else
 
             if (type === ATTACK) {
-                const result = cmd(type, socketId, payload);
+                // @ts-ignore
+                const result = cmd(type, payload?.indexPlayer, payload);
                 ws.clients.forEach((client) => {
                     client.send(JSON.stringify(result));
 
-                    // const enemyShips: any = getShipsByPlayer()
+
 
                     client.send(JSON.stringify({
                         type: TURN,
                         // @ts-ignore
-                        data: JSON.stringify({currentPlayer: nextPlayerTurn(payload?.indexPlayer, [0, 1])})
+                        // data: JSON.stringify({currentPlayer: nextPlayerTurn(payload?.indexPlayer, [0, 1])})
+                        data: JSON.stringify({currentPlayer: 0})
                     }));
                 });
 

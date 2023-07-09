@@ -3,14 +3,14 @@ import {Game} from './Game/Game.ts';
 
 export type Room = {
     roomId: number,
-    // roomUsers?: [{ name: string, index: number }]
-    roomUsers: []
+    roomUsers?: [{ name: string, index: number }]
+    // roomUsers: []
 }
 
-interface Database {
+type Database = {
     players?: Player[],
     games?: Game[],
-    rooms?: any,
+    rooms?: Room[],
     ships?: any
 }
 

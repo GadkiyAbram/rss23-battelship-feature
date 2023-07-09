@@ -15,8 +15,7 @@ const addRoom = (): number => {
     const lastIndex = rooms?.length || 0;
 
     const newRoom: Room = {
-        roomId: lastIndex,
-        roomUsers: []
+        roomId: lastIndex
     }
 
     if (rooms?.length !== 1) {
@@ -58,7 +57,16 @@ export const updateRoomState = (roomId: number, playerId: number) => {
     const player = players?.shift();
     // room.roomUsers = [player];
     // room.roomUsers = [...room.roomUsers, player];
-    room.roomUsers.push(player);
+
+    if (room && player?.name) {
+        if (room.roomUsers === undefined) {
+            room.roomUsers = [{name: player?.name, index: playerId}];
+        }
+
+        if (room.roomUsers) {
+            room.roomUsers.push({name: player?.name, index: playerId});
+        }
+    }
 
     return {
         ...room,

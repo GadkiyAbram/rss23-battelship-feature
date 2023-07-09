@@ -1,5 +1,5 @@
-import {getShipsByPlayer} from "./ships.ts";
-import {ATTACK} from "../constants/commands.ts";
+import {getShipsByPlayer} from './ships.ts';
+import {ATTACK} from '../constants/commands.ts';
 
 export const getEnemy = (playerId: number): number => {
     if (playerId === 1) {
@@ -13,6 +13,7 @@ export const attack = (playerId: number, payload: any) => {
     const enemyShips: any = getShipsByPlayer(payload.indexPlayer);
     const {x: xShot, y: yShot} = payload
     const {playerShips: ships} = enemyShips;
+    let allDestroyed = true;
 
     let shipStatus = 'miss';
 
@@ -21,6 +22,24 @@ export const attack = (playerId: number, payload: any) => {
             shipStatus = 'shot';
         } else {
             shipStatus = 'killed';
+        }
+
+        for (let i: number = 0; i < 10; i++) {
+            for (let j: number = 0; j < 10; j++) {
+                if (ships[xShot][yShot]) {
+                    allDestroyed = false;
+                }
+            }
+        }
+
+        if (allDestroyed) {
+            return {
+                type: 'finish',
+                data: JSON.stringify({
+                    winPlayer: playerId
+                }),
+                id: 0
+            }
         }
 
         return {
