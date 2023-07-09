@@ -11,7 +11,7 @@ const {
     games
 } = db;
 
-const addRoom = (): number => {
+export const addRoom = (): number => {
     const lastIndex = rooms?.length || 0;
 
     const newRoom: Room = {
@@ -84,4 +84,15 @@ export const addUserToTheRoom = (playerId: number, roomId: number) => {
         idGame,
         idPlayer
     }
+}
+
+
+export const updateRoom = (playerId: number) => {
+    let roomId = 0;
+
+    if (!rooms?.length) {
+        roomId = addRoom();
+    }
+
+    return updateRoomState(roomId, playerId);
 }

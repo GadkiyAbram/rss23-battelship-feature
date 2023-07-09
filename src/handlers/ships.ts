@@ -3,9 +3,10 @@ import {getGameById} from './game.ts';
 import {Ship} from '../Entities/types.ts';
 import {shipsData} from '../Entities/db.ts';
 import {getEnemy} from "./attack.ts";
+import {gameField} from '../Entities/db.ts';
 
 const {ships: shipsTable} = db;
-export const addShips = (playerId: number, ships: Ship): number => {
+export const addShips = (playerId: number, ships: Ship[]): number => {
     return shipsTable.push({
         ships,
         currentPlayerIndex: playerId
@@ -22,9 +23,8 @@ export const initShips = (playerId: number) => {
     const ships = JSON.parse(enemyShips).ships.ships;
 
     // let gameField: number[][] = [];
-    let gameField: number[][] = new Array<Array<number>>(10);
+    // let gameField: number[][] = new Array<Array<number>>(10);
 
-    let stringResult = '';
     let stringResult2 = '';
 
     for (let i: number = 0; i < 10; i++) {
@@ -32,9 +32,7 @@ export const initShips = (playerId: number) => {
 
         for (let j: number = 0; j < 10; j++) {
             gameField[i][j] = 0;
-            stringResult += `${gameField[i][j]} `;
         }
-        stringResult += `\n`;
     }
 
     // console.log(ships);
@@ -78,6 +76,7 @@ export const initShips = (playerId: number) => {
 
 export const getShipsByPlayer = (playerId: number) => {
     const enemyId = getEnemy(playerId);
+    // const enemyId = playerId;
 
     // @ts-ignore
     return shipsPositions.find(({playerId: id}) => id === enemyId);

@@ -1,4 +1,4 @@
-export class Player{
+export class Player {
     name: string;
     password: string;
 

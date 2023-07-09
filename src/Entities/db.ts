@@ -22,7 +22,8 @@ const db: Database = {
 };
 
 const shipsData: any = [];
-const shipsPositions: any = [];
+let shipsPositions: any = [];
+let gameField: any = [];
 
 // const playersDb: Player[] = [];
 // const gamesDb: Game[] = [];
@@ -30,5 +31,6 @@ const shipsPositions: any = [];
 export {
     db,
     shipsData,
-    shipsPositions
+    shipsPositions,
+    gameField
 }
