@@ -1,32 +1,22 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as http from 'http';
-import {WebSocket, WebSocketServer} from 'ws';
+import {WebSocket,
+    WebSocketServer
+} from 'ws';
 import {cmd} from '../handlers/cmd.ts';
 import {
-    ADD_SHIPS,
-    ADD_USER_TO_ROOM,
-    ATTACK,
-    CREATE_GAME,
-    CREATE_ROOM,
-    START_GAME,
-    TURN,
-    REG, UPDATE_ROOM
-} from "../constants/commands.ts";
-import {addShips, getShipsByPlayer, initShips} from "../handlers/ships.ts";
-import {nextPlayerTurn} from "../utils/nextPlayerTurn.ts";
+    cmds
+} from '../constants/commands.ts';
+import {initShips} from '../handlers/ships.ts';
+import {nextPlayerTurn} from '../utils/nextPlayerTurn.ts';
 import {shipsData, shipsPositions} from '../Entities/db.ts';
-import {createPlayer} from "../handlers/player.ts";
-import {updateRoom, updateRoomState} from "../handlers/game.ts";
-import {db} from '../Entities/db.ts';
-import {attack} from "../handlers/attack.ts";
-
-const {ships: shipsTable} = db;
+import {createPlayer} from '../handlers/player.ts';
+import {updateRoom} from '../handlers/game.ts';
+import {attack} from '../handlers/attack.ts';
 
 let socketId: number = 0;
-// @ts-ignore
-const startGameData = [];
-const socketClients: {id: number, sock: WebSocket}[] = [];
+const socketClients: {id: number, socketClient: WebSocket}[] = [];
 
 export const httpServer = http.createServer(function (req, res) {
     const __dirname = path.resolve(path.dirname(''));
@@ -44,13 +34,13 @@ export const httpServer = http.createServer(function (req, res) {
 
 const ws = new WebSocketServer({server: httpServer});
 
-ws.on('connection', (socket) => {
+ws.on('connection', (webSocket) => {
     const newSocketId = socketId++;
-    socketClients.push({id: newSocketId, sock: socket});
+    socketClients.push({id: newSocketId, socketClient: webSocket});
 
     console.log(`${newSocketId} Connected!`);
 
-    socket.on('message', (msg) => {
+    webSocket.on('message', (msg) => {
         try {
             console.log(msg.toString());
             const requestData = JSON.parse(msg.toString());
@@ -61,117 +51,47 @@ ws.on('connection', (socket) => {
                 payload = JSON.parse(requestData.data);
             }
 
-            if (type === REG) {
+            if (type === cmds.REG) {
                 const playerName = payload?.name;
                 const playerPassword = payload?.password;
 
-                const createdPlayer = createPlayer(
+                const result = cmd(
+                    type,
                     newSocketId,
-                    {
-                        name: playerName, password: playerPassword
-                    });
+                    {name: playerName, password: playerPassword}
+                );
 
                 const playerCreated = {
                     type,
-                    data: JSON.stringify(createdPlayer),
+                    data: JSON.stringify(result),
                     id: 0
                 }
 
-                socket.send(JSON.stringify(playerCreated));
+                webSocket.send(JSON.stringify(playerCreated));
             }
 
-            if (type === CREATE_ROOM) {
-                const updatedRoom = updateRoom(newSocketId);
+            if (type === cmds.CREATE_ROOM) {
+                const room = updateRoom(newSocketId);
 
                 const roomUpdated = {
-                    type: UPDATE_ROOM,
-                    data: JSON.stringify([updatedRoom]),
+                    type: cmds.UPDATE_ROOM,
+                    data: JSON.stringify([room]),
                     id: 0
-                }
+                };
+
                 ws.clients.forEach((client) => {
                     client.send(JSON.stringify(roomUpdated));
                 });
             }
 
-            if (type === ADD_USER_TO_ROOM) {
-                let playerId = 0;
-                ws.clients.forEach((client) => {
-                    const result = cmd(type, playerId, payload);
-                    playerId++;
-                    client.send(JSON.stringify(result));
+            if (type === cmds.ADD_USER_TO_ROOM) {
+                socketClients.forEach(({id, socketClient}) => {
+                    const result = cmd(type, id, payload);
+                    socketClient.send(JSON.stringify(result));
                 });
             }
 
-            // if (type === ADD_SHIPS) {
-            //     const playerId = payload?.indexPlayer;
-            //     const ships = payload?.ships;
-            //
-            //     addShips(playerId, ships);
-            //     // @ts-ignore
-            //     const shipsData = shipsTable.find(({currentPlayerIndex}) => currentPlayerIndex === playerId);
-            //
-            //     shipsData[playerId] = {
-            //         data: JSON.stringify(ships),
-            //         id: 0
-            //     }
-            //
-            //     shipsPositions.push(initShips(playerId));
-            //
-            //     console.log(shipsPositions);
-            //
-            //     if (shipsData.length === socketClients.length) {
-            //         // let initId = 0;
-            //         // const data = shipsData[initId];
-            //         // const currentPlayerTurn = initId;
-            //         socketClients.forEach(({id, sock}) => {
-            //             const data = shipsData[id];
-            //
-            //             sock.send(JSON.stringify({
-            //                 type: START_GAME,
-            //                 data
-            //             }));
-            //
-            //             sock.send(JSON.stringify({
-            //                 type: TURN,
-            //                 data: JSON.stringify({currentPlayer: id})
-            //             }))
-            //             // initId++;
-            //         });
-            //
-            //
-            //         // ws.clients.forEach((client) => {
-            //         //     client.send(JSON.stringify({
-            //         //         type: START_GAME,
-            //         //         data
-            //         //     }));
-            //         //
-            //         //     client.send(JSON.stringify({
-            //         //         type: TURN,
-            //         //         data: JSON.stringify({currentPlayer: currentPlayerTurn})
-            //         //     }))
-            //         //     initId++;
-            //         // });
-            //     }
-            // }
-
-
-            // if (type === CREATE_ROOM) {
-            //     const result = cmd(type, socketId, payload);
-            //     ws.clients.forEach((client) => {
-            //         client.send(JSON.stringify(result));
-            //     });
-            // }
-            // if (type === ADD_USER_TO_ROOM) {
-            //     let playerId = 0;
-            //     ws.clients.forEach((client) => {
-            //         const result = cmd(type, playerId, payload);
-            //         playerId++;
-            //         client.send(JSON.stringify(result));
-            //     });
-            // }
-
-            if (type === ADD_SHIPS) {
-                // const startGameData = [];
+            if (type === cmds.ADD_SHIPS) {
                 const playerId = payload.indexPlayer;
 
                 shipsData[playerId] = cmd(type, playerId, payload);
@@ -179,53 +99,43 @@ ws.on('connection', (socket) => {
                 shipsPositions.push(initShips(playerId));
                 const players = socketClients?.map(({id}) => id);
 
-                console.log(shipsPositions);
-                console.log(`PLAYERS: ${players}`);
                 const currentPlayer = nextPlayerTurn(playerId, players);
-                console.log(`current player: ${currentPlayer}`);
 
                 if (shipsData.length === socketClients.length) {
-                    socketClients.forEach(({id, sock}) => {
+                    socketClients.forEach(({id, socketClient}) => {
                         const data = shipsData[id];
 
-                        sock.send(JSON.stringify({
-                            type: START_GAME,
+                        socketClient.send(JSON.stringify({
+                            type: cmds.START_GAME,
                             data
                         }));
 
-                        sock.send(JSON.stringify({
-                            type: TURN,
+                        socketClient.send(JSON.stringify({
+                            type: cmds.TURN,
                             data: JSON.stringify({currentPlayer})
                         }))
                     });
                 }
             }
 
-            if (type === ATTACK) {
+            if (type === cmds.ATTACK) {
                 const playerId = payload.indexPlayer;
-                console.log(`PLSYER ID: ${playerId}`);
                 const result = attack(playerId, payload);
 
                 const {nextPlayer, attackResult} = result;
                 const players = socketClients?.map(({id}) => id);
 
-                console.log(result);
                 const currentPlayer = !nextPlayer ? playerId : nextPlayerTurn(playerId, players);
 
-                console.log(`CURRENT PLAYER: ${nextPlayerTurn(playerId, players)}`);
+                socketClients.forEach(({socketClient}) => {
 
-                socketClients.forEach(({sock}) => {
+                    socketClient.send(JSON.stringify(attackResult));
 
-                    sock.send(JSON.stringify(attackResult));
-
-                    sock.send(JSON.stringify({
-                        type: TURN,
+                    socketClient.send(JSON.stringify({
+                        type: cmds.TURN,
                         data: JSON.stringify({currentPlayer})
                     }));
                 });
-
-                // socket.send(JSON.stringify(result));
-
             }
         } catch (err) {
             console.log(err);

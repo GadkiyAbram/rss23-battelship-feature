@@ -1,5 +1,5 @@
 import {getShipsByPlayer} from './ships.ts';
-import {ATTACK} from '../constants/commands.ts';
+import {cmds} from '../constants/commands.ts';
 import {gameField} from "../Entities/db.ts";
 
 export const getEnemy = (playerId: number): number => {
@@ -63,7 +63,7 @@ export const attack = (playerId: number, payload: any) => {
         return {
             nextPlayer: false,
             attackResult: {
-                type: ATTACK,
+                type: cmds.ATTACK,
                 data: JSON.stringify({
                     position: {
                         x: xShot,
@@ -80,7 +80,7 @@ export const attack = (playerId: number, payload: any) => {
     return {
         nextPlayer: true,
         attackResult: {
-            type: ATTACK,
+            type: cmds.ATTACK,
             data: JSON.stringify({
                 position: {
                     x: xShot,

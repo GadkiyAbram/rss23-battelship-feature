@@ -1,16 +1,8 @@
 import {
-    REG,
-    UPDATE_WINNERS,
-    CREATE_ROOM,
-    ADD_USER_TO_ROOM,
-    UPDATE_ROOM,
-    CREATE_GAME,
-    ADD_SHIPS,
-    START_GAME,
-    ATTACK
+    cmds
 } from '../constants/commands.ts';
 import {createPlayer} from './player.ts';
-import {addUserToTheRoom, createRoom} from './game.ts';
+import {addUserToTheRoom, createRoom, updateRoom} from './game.ts';
 import {db} from '../Entities/db.ts';
 import {addShips, getShipsByPlayer, startGame} from "./ships.ts";
 import {attack} from "./attack.ts";
@@ -23,7 +15,7 @@ const {
 
 export const cmd = (cmd: string, socketId: number, payload: any) => {
     switch (cmd) {
-        case REG:
+        case cmds.REG:
             const created = createPlayer(socketId, payload);
 
             return {
@@ -31,26 +23,26 @@ export const cmd = (cmd: string, socketId: number, payload: any) => {
                 data: JSON.stringify(created),
                 id: 0
             };
-        case UPDATE_WINNERS:
+        case cmds.UPDATE_WINNERS:
             break;
-        case CREATE_ROOM:
-            const room = createRoom(socketId);
+        case cmds.CREATE_ROOM:
+            const room = updateRoom(socketId);
 
             return {
-                type: UPDATE_ROOM,
+                type: cmds.UPDATE_ROOM,
                 data: JSON.stringify([room]),
                 id: 0
-            }
-        case ADD_USER_TO_ROOM:
+            };
+        case cmds.ADD_USER_TO_ROOM:
             const {indexRoom} = payload;
             const addedRoom = addUserToTheRoom(socketId, indexRoom);
 
             return {
-                type: CREATE_GAME,
+                type: cmds.CREATE_GAME,
                 data: JSON.stringify(addedRoom),
                 id: 0
             }
-        case ADD_SHIPS:
+        case cmds.ADD_SHIPS:
             addShips(socketId, payload);
             // @ts-ignore
             const shipsData = shipsTable.find(({currentPlayerIndex}) => currentPlayerIndex === socketId);
@@ -59,7 +51,7 @@ export const cmd = (cmd: string, socketId: number, payload: any) => {
                 data: JSON.stringify(shipsData),
                 id: 0
             }
-        case ATTACK:
+        case cmds.ATTACK:
             return attack(socketId, payload);
         default:
             break;
