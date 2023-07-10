@@ -6,9 +6,10 @@ import {
     addUserToTheRoom,
     updateRoom
 } from './game.ts';
-import {db, shipsData} from '../Entities/db.ts';
-import {addShips} from './ships.ts';
+import {db, shipsData, shipsPositions} from '../Entities/db.ts';
+import {addShips, initShips} from './ships.ts';
 import {attack} from './attack.ts';
+import {nextPlayerTurn} from "../utils/nextPlayerTurn.ts";
 
 const {
     players: playersTable,
@@ -16,7 +17,7 @@ const {
     ships: shipsTable
 } = db;
 
-export const cmd = (cmd: string, socketId: number, payload: any) => {
+export const cmd = (cmd: string, socketId: number, payload: any): any => {
     switch (cmd) {
         case cmds.REG:
             const created = createPlayer(socketId, payload);
@@ -46,14 +47,13 @@ export const cmd = (cmd: string, socketId: number, payload: any) => {
                 id: 0
             }
         case cmds.ADD_SHIPS:
-            const shipsData = addShips(socketId, payload);
-            // @ts-ignore
-            // const shipsData = shipsTable.find(({currentPlayerIndex}) => currentPlayerIndex === socketId);
+            const playerShipsData = addShips(socketId, payload);
+            shipsData[socketId] = playerShipsData;
+            shipsPositions.push(initShips(socketId));
 
-            return {
-                data: JSON.stringify(shipsData),
-                id: 0
-            }
+            console.log(shipsData);
+
+            return shipsData.length === 2;
         case cmds.ATTACK:
             return attack(socketId, payload);
         default:

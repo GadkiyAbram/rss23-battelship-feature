@@ -1,5 +1,4 @@
 import {db, shipsPositions} from '../Entities/db.ts';
-import {getGameById} from './game.ts';
 import {Ship} from '../Entities/types.ts';
 import {shipsData} from '../Entities/db.ts';
 import {getEnemy} from "./attack.ts";
@@ -18,8 +17,8 @@ export const addShips = (playerId: number, ships: Ship[]): {ships: Ship[], curre
 }
 
 export const initShips = (playerId: number) => {
-    const enemyShips = shipsData[playerId].data;
-    const ships = JSON.parse(enemyShips).ships.ships;
+    const enemyShips = shipsData[playerId].ships;
+    const ships = enemyShips.ships;
 
     for (let i: number = 0; i < 10; i++) {
         gameField[i] = new Array(10);

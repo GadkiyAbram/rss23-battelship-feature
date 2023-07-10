@@ -87,14 +87,14 @@ ws.on('connection', (webSocket) => {
 
             if (type === cmds.ADD_SHIPS) {
                 const playerId: number = Number(payload.indexPlayer);
-                shipsData[playerId] = cmd(type, playerId, payload);
+                const startGame: boolean = cmd(type, playerId, payload);
+                //
+                // shipsPositions.push(initShips(playerId));
 
-                shipsPositions.push(initShips(playerId));
                 const players = socketClients?.map(({id}) => id);
-
                 const currentPlayer = nextPlayerTurn(playerId, players);
 
-                if (shipsData.length === socketClients.length) {
+                if (startGame) {
                     socketClients.forEach(({id, socketClient}) => {
                         const data = shipsData[id];
 
@@ -109,6 +109,9 @@ ws.on('connection', (webSocket) => {
                         }))
                     });
                 }
+
+                // if (shipsData.length === socketClients.length) {
+                // }
             }
 
             if (type === cmds.ATTACK) {
