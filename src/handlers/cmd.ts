@@ -2,10 +2,13 @@ import {
     cmds
 } from '../constants/commands.ts';
 import {createPlayer} from './player.ts';
-import {addUserToTheRoom, createRoom, updateRoom} from './game.ts';
-import {db} from '../Entities/db.ts';
-import {addShips, getShipsByPlayer, startGame} from "./ships.ts";
-import {attack} from "./attack.ts";
+import {
+    addUserToTheRoom,
+    updateRoom
+} from './game.ts';
+import {db, shipsData} from '../Entities/db.ts';
+import {addShips} from './ships.ts';
+import {attack} from './attack.ts';
 
 const {
     players: playersTable,
@@ -43,9 +46,9 @@ export const cmd = (cmd: string, socketId: number, payload: any) => {
                 id: 0
             }
         case cmds.ADD_SHIPS:
-            addShips(socketId, payload);
+            const shipsData = addShips(socketId, payload);
             // @ts-ignore
-            const shipsData = shipsTable.find(({currentPlayerIndex}) => currentPlayerIndex === socketId);
+            // const shipsData = shipsTable.find(({currentPlayerIndex}) => currentPlayerIndex === socketId);
 
             return {
                 data: JSON.stringify(shipsData),

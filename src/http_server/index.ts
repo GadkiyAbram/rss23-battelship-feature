@@ -71,16 +71,10 @@ ws.on('connection', (webSocket) => {
             }
 
             if (type === cmds.CREATE_ROOM) {
-                const room = updateRoom(newSocketId);
-
-                const roomUpdated = {
-                    type: cmds.UPDATE_ROOM,
-                    data: JSON.stringify([room]),
-                    id: 0
-                };
+                const room = cmd(type, newSocketId, payload);
 
                 ws.clients.forEach((client) => {
-                    client.send(JSON.stringify(roomUpdated));
+                    client.send(JSON.stringify(room));
                 });
             }
 
@@ -92,8 +86,7 @@ ws.on('connection', (webSocket) => {
             }
 
             if (type === cmds.ADD_SHIPS) {
-                const playerId = payload.indexPlayer;
-
+                const playerId: number = Number(payload.indexPlayer);
                 shipsData[playerId] = cmd(type, playerId, payload);
 
                 shipsPositions.push(initShips(playerId));
