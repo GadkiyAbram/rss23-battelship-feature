@@ -17,8 +17,7 @@ export const addShips = (playerId: number, ships: Ship[]): {ships: Ship[], curre
 }
 
 export const initShips = (playerId: number) => {
-    const enemyShips = shipsData[playerId].ships;
-    const ships = enemyShips.ships;
+    const enemyShips = shipsData[playerId].ships.ships;
 
     for (let i: number = 0; i < 10; i++) {
         gameField[i] = new Array(10);
@@ -28,7 +27,7 @@ export const initShips = (playerId: number) => {
     }
 
     // @ts-ignore
-    ships.forEach(({position, direction, length: shipLength }) => {
+    enemyShips.forEach(({position, direction, length: shipLength }) => {
         let {x: startX, y: startY} = position;
 
         if (direction) {
@@ -49,7 +48,7 @@ export const initShips = (playerId: number) => {
 }
 
 export const getShipsByPlayer = (playerId: number) => {
-    const enemyId = getEnemy(playerId);
+    const enemyId: number = getEnemy(playerId);
     // const enemyId = playerId;
 
     // @ts-ignore

@@ -9,6 +9,7 @@ const ADD_SHIPS: string = 'add_ships';
 const START_GAME: string = 'start_game';
 const TURN: string = 'turn';
 const ATTACK: string = 'attack';
+const FINISH: string = 'finish';
 
 const cmds = {
     REG: 'reg',
@@ -20,7 +21,8 @@ const cmds = {
     ADD_SHIPS: 'add_ships',
     START_GAME: 'start_game',
     TURN: 'turn',
-    ATTACK: 'attack'
+    ATTACK: 'attack',
+    FINISH:  'finish'
 };
 
 const attachStatuses = {

@@ -51,8 +51,6 @@ export const cmd = (cmd: string, socketId: number, payload: any): any => {
             shipsData[socketId] = playerShipsData;
             shipsPositions.push(initShips(socketId));
 
-            console.log(shipsData);
-
             return shipsData.length === 2;
         case cmds.ATTACK:
             return attack(socketId, payload);

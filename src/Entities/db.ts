@@ -4,7 +4,6 @@ import {Game} from './Game/Game.ts';
 export type Room = {
     roomId: number,
     roomUsers?: [{ name: string, index: number }]
-    // roomUsers: []
 }
 
 type Database = {
@@ -24,9 +23,6 @@ const db: Database = {
 const shipsData: any = [];
 let shipsPositions: any = [];
 let gameField: any = [];
-
-// const playersDb: Player[] = [];
-// const gamesDb: Game[] = [];
 
 export {
     db,
