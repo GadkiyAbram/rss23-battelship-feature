@@ -3,7 +3,6 @@ import {
     Room
 } from '../Entities/db.ts';
 import {Game} from '../Entities/Game/Game.ts';
-import {Player} from "../Entities/Player/Player.ts";
 
 const {
     rooms,
@@ -23,13 +22,10 @@ export const addRoom = (): number => {
     }
 
     return 0;
-    // return lastIndex ? lastIndex : rooms?.push(newRoom) || 1;
 }
 
 const getRoomById = (id: number) => {
-    // @ts-ignore
     return rooms?.find(({roomId}) => roomId === id) || 0;
-    // return rooms ? rooms[roomId] : null;
 }
 
 const createGame = () => {
@@ -53,10 +49,7 @@ export const createRoom = (playerId: number): any => {
 export const updateRoomState = (roomId: number, playerId: number) => {
     const room = getRoomById(roomId);
 
-    // const player = players[playerId];
     const player = players?.shift();
-    // room.roomUsers = [player];
-    // room.roomUsers = [...room.roomUsers, player];
 
     if (room && player?.name) {
         if (room.roomUsers === undefined) {

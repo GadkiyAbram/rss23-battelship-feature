@@ -49,7 +49,6 @@ export const initShips = (playerId: number) => {
 
 export const getShipsByPlayer = (playerId: number) => {
     const enemyId: number = getEnemy(playerId);
-    // const enemyId = playerId;
 
     // @ts-ignore
     return shipsPositions.find(({playerId: id}) => id === enemyId);

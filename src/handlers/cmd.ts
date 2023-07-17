@@ -6,16 +6,9 @@ import {
     addUserToTheRoom,
     updateRoom
 } from './game.ts';
-import {db, shipsData, shipsPositions} from '../Entities/db.ts';
+import {shipsData, shipsPositions} from '../Entities/db.ts';
 import {addShips, initShips} from './ships.ts';
 import {attack} from './attack.ts';
-import {nextPlayerTurn} from "../utils/nextPlayerTurn.ts";
-
-const {
-    players: playersTable,
-    rooms,
-    ships: shipsTable
-} = db;
 
 export const cmd = (cmd: string, socketId: number, payload: any): any => {
     switch (cmd) {
