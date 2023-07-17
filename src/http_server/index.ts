@@ -1,18 +1,16 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as http from 'http';
-import {WebSocket,
+import {
+    WebSocket,
     WebSocketServer
 } from 'ws';
 import {cmd} from '../handlers/cmd.ts';
 import {
     cmds
 } from '../constants/commands.ts';
-import {initShips} from '../handlers/ships.ts';
 import {nextPlayerTurn} from '../utils/nextPlayerTurn.ts';
-import {shipsData, shipsPositions} from '../Entities/db.ts';
-import {createPlayer} from '../handlers/player.ts';
-import {updateRoom} from '../handlers/game.ts';
+import {shipsData} from '../Entities/db.ts';
 import {attack} from '../handlers/attack.ts';
 
 let socketId: number = 0;
@@ -88,8 +86,6 @@ ws.on('connection', (webSocket) => {
             if (type === cmds.ADD_SHIPS) {
                 const playerId: number = Number(payload.indexPlayer);
                 const startGame: boolean = cmd(type, playerId, payload);
-                //
-                // shipsPositions.push(initShips(playerId));
 
                 const players = socketClients?.map(({id}) => id);
                 const currentPlayer = nextPlayerTurn(playerId, players);
@@ -109,9 +105,6 @@ ws.on('connection', (webSocket) => {
                         }))
                     });
                 }
-
-                // if (shipsData.length === socketClients.length) {
-                // }
             }
 
             if (type === cmds.ATTACK) {

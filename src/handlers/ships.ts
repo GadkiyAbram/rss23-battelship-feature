@@ -41,6 +41,17 @@ export const initShips = (playerId: number) => {
         }
     });
 
+    let stringResult = '';
+
+    for (let i: number = 0; i < 10; i++) {
+        for (let j: number = 0; j < 10; j++) {
+            stringResult += `${gameField[j][i]} `;
+        }
+        stringResult += '\n';
+    }
+
+    console.log(stringResult);
+
     return {
         playerId,
         playerShips: gameField

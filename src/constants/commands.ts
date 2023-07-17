@@ -1,16 +1,3 @@
-// commands (cmds)
-const REG: string = 'reg';
-const UPDATE_WINNERS: string = 'update_winners';
-const CREATE_ROOM: string = 'create_room';
-const ADD_USER_TO_ROOM: string = 'add_user_to_room';
-const UPDATE_ROOM: string = 'update_room';
-const CREATE_GAME: string = 'create_game';
-const ADD_SHIPS: string = 'add_ships';
-const START_GAME: string = 'start_game';
-const TURN: string = 'turn';
-const ATTACK: string = 'attack';
-const FINISH: string = 'finish';
-
 const cmds = {
     REG: 'reg',
     UPDATE_WINNERS: 'update_winners',
@@ -25,7 +12,7 @@ const cmds = {
     FINISH:  'finish'
 };
 
-const attachStatuses = {
+const attackStatuses = {
     MISS: 'miss',
     SHOT: 'shot',
     KILLED: 'killed'
@@ -33,5 +20,5 @@ const attachStatuses = {
 
 export {
     cmds,
-    attachStatuses
+    attackStatuses
 }
