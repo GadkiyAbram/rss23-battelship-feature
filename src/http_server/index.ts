@@ -6,9 +6,7 @@ import {
     WebSocketServer
 } from 'ws';
 import {cmd} from '../handlers/cmd.ts';
-import {
-    cmds
-} from '../constants/commands.ts';
+import {cmds} from '../constants/commands.ts';
 import {nextPlayerTurn} from '../utils/nextPlayerTurn.ts';
 import {shipsData} from '../Entities/db.ts';
 import {attack} from '../handlers/attack.ts';
@@ -40,7 +38,6 @@ ws.on('connection', (webSocket) => {
 
     webSocket.on('message', (msg) => {
         try {
-            console.log(msg.toString());
             const requestData = JSON.parse(msg.toString());
             const {type} = requestData;
             let payload: any;

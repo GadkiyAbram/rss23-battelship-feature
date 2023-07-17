@@ -1,6 +1,5 @@
 import {Player} from '../Entities/Player/Player.ts';
 import {db} from '../Entities/db.ts';
-import {log} from "util";
 
 const {players: playersTable} = db;
 

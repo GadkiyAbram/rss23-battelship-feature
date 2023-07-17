@@ -76,7 +76,6 @@ export const updateRoomState = (roomId: number, playerId: number) => {
 }
 
 export const addUserToTheRoom = (playerId: number, roomId: number) => {
-    console.log(playerId);
     const idGame = createGame();
     const idPlayer = playerId;
 
